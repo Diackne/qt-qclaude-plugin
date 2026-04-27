@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 24.999999 24.999999"
+   version="1.1"
+   id="svg19"
+   sodipodi:docname="qclaude.svg"
+   inkscape:version="1.4.3 (fcd0343856, 2026-01-01)"
+   width="25"
+   height="25"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview19"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="11.808683"
+     inkscape:cx="26.971678"
+     inkscape:cy="31.544585"
+     inkscape:window-width="1920"
+     inkscape:window-height="1043"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g19" />
+  <defs
+     id="defs4">
+    <linearGradient
+       id="swatch115"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop115" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient21"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop21" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop22" />
+    </linearGradient>
+    <linearGradient
+       id="bgGrad"
+       x1="0"
+       y1="0"
+       x2="100"
+       y2="100"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(0.47904192,0.23952096)">
+      <stop
+         offset="0%"
+         style="stop-color:#7AE05A"
+         id="stop1" />
+      <stop
+         offset="100%"
+         style="stop-color:#3DC45A"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       id="sunGrad"
+       x1="0.30000001"
+       y1="0.2"
+       x2="0.69999999"
+       y2="0.80000001">
+      <stop
+         offset="0%"
+         style="stop-color:#F4A261"
+         id="stop3" />
+      <stop
+         offset="100%"
+         style="stop-color:#E76F51"
+         id="stop4" />
+    </linearGradient>
+    <clipPath
+       id="roundedRect">
+      <rect
+         width="100"
+         height="100"
+         rx="22"
+         ry="22"
+         id="rect4"
+         x="0"
+         y="0" />
+    </clipPath>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient21"
+       id="linearGradient22"
+       x1="-3.6419988"
+       y1="-25.914169"
+       x2="3.6419988"
+       y2="25.914169"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient115"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient116"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient117"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient118"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient119"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient120"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient121"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient122"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient123"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient124"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient125"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch115"
+       id="linearGradient126"
+       x1="-3.5"
+       y1="-18"
+       x2="3.5"
+       y2="-18"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <!-- Background -->
+  <!-- Sun rays — 12 petals -->
+  <g
+     clip-path="url(#roundedRect)"
+     id="g19"
+     style="fill:#1a1a1a"
+     transform="matrix(1.3592814,0,0,1.3592814,-14.355203,-12.678557)">
+    <g
+       transform="matrix(-0.73240031,0,0,0.73240031,43.166382,42.119801)"
+       id="g18"
+       style="fill:#1a1a1a"
+       inkscape:transform-center-x="0.61398867"
+       inkscape:transform-center-y="0.26313743">
+      <g
+         fill="#F5F0E8"
+         id="g17"
+         style="fill:#1a1a1a;stroke:url(#linearGradient22);stroke-width:0.337678;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+         transform="matrix(0.35369367,0,0,0.35369367,32.005203,-32.005203)">
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           id="rect6"
+           style="fill:#1a1a1a;stroke:url(#linearGradient116);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           transform="rotate(30)"
+           id="rect7"
+           style="fill:#1a1a1a;stroke:url(#linearGradient117);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           transform="rotate(60)"
+           id="rect8"
+           style="fill:#1a1a1a;stroke:url(#linearGradient118);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           transform="rotate(90)"
+           id="rect9"
+           style="fill:#1a1a1a;stroke:url(#linearGradient119);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           transform="rotate(120)"
+           id="rect10"
+           style="fill:#1a1a1a;stroke:url(#linearGradient120);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           transform="rotate(150)"
+           id="rect11"
+           style="fill:#1a1a1a;stroke:url(#linearGradient121);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           transform="scale(-1)"
+           id="rect12"
+           style="fill:#1a1a1a;stroke:url(#linearGradient122);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           transform="rotate(-150)"
+           id="rect13"
+           style="fill:#1a1a1a;stroke:url(#linearGradient123);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           transform="rotate(-120)"
+           id="rect14"
+           style="fill:#1a1a1a;stroke:url(#linearGradient124);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           transform="rotate(-90)"
+           id="rect15"
+           style="fill:#1a1a1a;stroke:url(#linearGradient125);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           transform="rotate(-60)"
+           id="rect16"
+           style="fill:#1a1a1a;stroke:url(#linearGradient126);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+        <rect
+           x="-3.5"
+           y="-26"
+           width="7"
+           height="16"
+           rx="3.5"
+           transform="rotate(-30)"
+           id="rect17"
+           style="fill:#1a1a1a;stroke:url(#linearGradient115);stroke-width:0;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;paint-order:stroke fill markers" />
+      </g>
+      <!-- Center circle -->
+      <circle
+         cx="32.005203"
+         cy="-32.005203"
+         r="2.2319803"
+         fill="url(#sunGrad)"
+         id="circle17"
+         style="fill:#1a1a1a;stroke-width:0.223198" />
+    </g>
+  </g>
+</svg>

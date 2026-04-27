@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # Keep GitHub Actions versions current. PRs land weekly with any
+  # available bumps to actions/checkout, jurplel/install-qt-action,
+  # actions/cache, ilammy/msvc-dev-cmd, github/codeql-action, etc.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "ci"

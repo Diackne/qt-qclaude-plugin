@@ -1,0 +1,100 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore: [ "**.md" ]
+  pull_request:
+    branches: [ master ]
+    paths-ignore: [ "**.md" ]
+  schedule:
+    - cron: '0 4 * * 1'  # Mondays 04:00 UTC — weekly baseline scan
+  workflow_dispatch:
+
+env:
+  QT_VERSION: 6.10.1
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: Analyze C++
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Initialize CodeQL *before* the build so it can wrap the compiler.
+      # `security-and-quality` is the broader query suite (security + maintainability).
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+          queries: security-and-quality
+
+      # Mirror the Linux build steps from build.yml so CodeQL sees a real
+      # build of every translation unit. Keeping the install commands in
+      # sync with build.yml is on the human — Dependabot won't help here.
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: linux
+          target: desktop
+          arch: linux_gcc_64
+          modules: qt5compat
+          cache: true
+
+      - name: Cache Qt Creator
+        id: cache-qtc
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.workspace }}/qtcreator
+          key: qtc-online-ubuntu-latest-v1
+
+      - name: Install Qt Creator (Qt online installer)
+        if: steps.cache-qtc.outputs.cache-hit != 'true'
+        env:
+          QT_EMAIL: ${{ secrets.QT_EMAIL }}
+          QT_PASSWORD: ${{ secrets.QT_PASSWORD }}
+        run: |
+          set -e
+          if [ -z "$QT_EMAIL" ] || [ -z "$QT_PASSWORD" ]; then
+            echo "::error::QT_EMAIL and QT_PASSWORD secrets must be set."
+            exit 1
+          fi
+          INSTALL_ROOT="$RUNNER_WORKSPACE/qtcreator"
+          mkdir -p "$INSTALL_ROOT"
+          curl -fsSL -o installer.run \
+            "https://download.qt.io/official_releases/online_installers/qt-online-installer-linux-x64-online.run"
+          chmod +x installer.run
+          ./installer.run \
+            --root "$INSTALL_ROOT" \
+            --accept-licenses --accept-obligations --confirm-command \
+            --default-answer --no-default-installations \
+            --email "$QT_EMAIL" --password "$QT_PASSWORD" \
+            install qt.tools.qtcreator_gui qt.tools.qtcreator_dev
+
+      - name: Configure
+        run: |
+          QTC_CONFIG=$(find "$RUNNER_WORKSPACE/qtcreator" -name 'QtCreatorConfig.cmake' -print -quit)
+          if [ -z "$QTC_CONFIG" ]; then
+            echo "Could not find QtCreatorConfig.cmake" >&2
+            ls -R "$RUNNER_WORKSPACE/qtcreator" | head -100
+            exit 1
+          fi
+          QTC_ROOT="${QTC_CONFIG%/lib/cmake/QtCreator/QtCreatorConfig.cmake}"
+          cmake -B build -S . \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_PREFIX_PATH="$Qt6_DIR;$QTC_ROOT"
+
+      - name: Build
+        run: cmake --build build --config RelWithDebInfo -j
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:cpp"

@@ -1,0 +1,15 @@
+{
+    "Id" : "qclaude",
+    "Name" : "QClaude",
+    "Version" : "0.1.0",
+    "CompatVersion" : "0.1.0",
+    "Vendor" : "RicGuerra",
+    "VendorId" : "ricguerra",
+    "Copyright" : "(C) 2026 RicGuerra",
+    "License" : "MIT",
+    "Description" : "Claude Code chat panel embedded in the Qt Creator right pane.",
+    "LongDescription" : "Adds a status-bar toggle that opens a Claude Code chat in Qt Creator's right pane. Runs the claude CLI in the current project / file directory, persists session_id per project, exposes a settings page (executable / model / permission mode), and adds 'Ask Claude' actions to the editor and project-tree context menus. Browser login is delegated to the claude CLI.",
+    "Url" : "https://github.com/RicGuerra/qt-qclaude-plugin",
+    "DocumentationUrl" : "https://github.com/RicGuerra/qt-qclaude-plugin#readme",
+    ${IDE_PLUGIN_DEPENDENCIES}
+}

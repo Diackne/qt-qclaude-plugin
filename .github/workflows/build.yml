@@ -1,0 +1,190 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+env:
+  QT_VERSION: 6.10.1
+  # Qt Creator version is no longer pinned — the Qt online installer always
+  # delivers the latest stable, matching what a developer running the Qt
+  # Maintenance Tool gets locally. Bump `qtc-online-…-vN` cache key below
+  # if you want to force a fresh install across runs.
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            qt_host: linux
+            qt_arch: linux_gcc_64
+            qtc_arch: linux_x64
+            archive_ext: .so
+            artifact: libQClaude.so
+          - os: macos-latest
+            qt_host: mac
+            qt_arch: clang_64
+            qtc_arch: mac_x64
+            archive_ext: .dylib
+            artifact: libQClaude.dylib
+          - os: windows-latest
+            qt_host: windows
+            qt_arch: win64_msvc2022_64
+            qtc_arch: windows_x64
+            archive_ext: .dll
+            artifact: QClaude.dll
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # MSVC environment for the Windows build (cl.exe, link.exe, …).
+      - name: Set up MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      # Install Qt 6. Core / Gui / Widgets / Network / Svg ride along in the
+      # base install; qt5compat is a separate add-on module that ships
+      # `Qt6Core5Compat`, which Qt Creator 19's CMake config requires
+      # transitively. install-qt-action's own `cache: true` handles Qt.
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: ${{ matrix.qt_host }}
+          target: desktop
+          arch: ${{ matrix.qt_arch }}
+          modules: qt5compat
+          cache: true
+
+      # Cache the Qt Creator install. Bump QTC_CACHE_VERSION in env: above
+      # to invalidate; otherwise we reuse the same headers + libs across runs.
+      - name: Cache Qt Creator
+        id: cache-qtc
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.workspace }}/qtcreator
+          key: qtc-online-${{ matrix.os }}-v1
+
+      # Install Qt Creator from the official Qt online installer (the same
+      # mechanism the Qt Maintenance Tool uses), so CI gets exactly what
+      # `~/Qt/Tools/QtCreator` looks like on a developer's machine. aqt's
+      # `tools_qtcreator` archive lags the official 19.0.0 release and is
+      # missing post-tag patches the source needs (`setOnApply`,
+      # `Core::ActionBuilder`, `Utils::PlainTextEdit`, etc.), so we pull
+      # from download.qt.io directly.
+      #
+      # Requires repo secrets QT_EMAIL and QT_PASSWORD (Qt account, free
+      # for open-source use).
+      - name: Install Qt Creator (Qt online installer)
+        if: steps.cache-qtc.outputs.cache-hit != 'true'
+        env:
+          QT_EMAIL: ${{ secrets.QT_EMAIL }}
+          QT_PASSWORD: ${{ secrets.QT_PASSWORD }}
+        shell: bash
+        run: |
+          set -e
+          if [ -z "$QT_EMAIL" ] || [ -z "$QT_PASSWORD" ]; then
+            echo "::error::QT_EMAIL and QT_PASSWORD secrets must be set in repo Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+
+          INSTALL_ROOT="$RUNNER_WORKSPACE/qtcreator"
+          mkdir -p "$INSTALL_ROOT"
+          BASE="https://download.qt.io/official_releases/online_installers"
+
+          case "${{ runner.os }}" in
+            Linux)
+              curl -fsSL -o installer.run "$BASE/qt-online-installer-linux-x64-online.run"
+              chmod +x installer.run
+              ./installer.run \
+                --root "$INSTALL_ROOT" \
+                --accept-licenses --accept-obligations --confirm-command \
+                --default-answer --no-default-installations \
+                --email "$QT_EMAIL" --password "$QT_PASSWORD" \
+                install qt.tools.qtcreator_gui qt.tools.qtcreator_dev
+              ;;
+            macOS)
+              curl -fsSL -o installer.dmg "$BASE/qt-online-installer-mac-x64-online.dmg"
+              MOUNT=$(hdiutil attach -nobrowse -noverify -noautoopen installer.dmg | tail -1 | awk '{print $NF}')
+              # The .dmg contains an installer .app bundle; the executable
+              # lives at <bundle>/Contents/MacOS/<bundlename>.
+              INSTALLER_BIN=$(find "$MOUNT" -maxdepth 4 -type f -name 'qt-online-installer-mac-*' -perm +x | head -1)
+              if [ -z "$INSTALLER_BIN" ]; then
+                echo "::error::Couldn't locate installer binary inside DMG"; ls -R "$MOUNT" | head -50; exit 1
+              fi
+              "$INSTALLER_BIN" \
+                --root "$INSTALL_ROOT" \
+                --accept-licenses --accept-obligations --confirm-command \
+                --default-answer --no-default-installations \
+                --email "$QT_EMAIL" --password "$QT_PASSWORD" \
+                install qt.tools.qtcreator_gui qt.tools.qtcreator_dev
+              hdiutil detach "$MOUNT" || true
+              ;;
+            Windows)
+              curl -fsSL -o installer.exe "$BASE/qt-online-installer-windows-x64-online.exe"
+              ./installer.exe \
+                --root "$INSTALL_ROOT" \
+                --accept-licenses --accept-obligations --confirm-command \
+                --default-answer --no-default-installations \
+                --email "$QT_EMAIL" --password "$QT_PASSWORD" \
+                install qt.tools.qtcreator_gui qt.tools.qtcreator_dev
+              ;;
+          esac
+
+      - name: Configure
+        shell: bash
+        run: |
+          # Locate QtCreatorConfig.cmake directly, then walk up three levels
+          # to the install prefix that contains it — robust across both
+          # layouts:
+          #   Linux/Windows: <install>/Tools/QtCreator/lib/cmake/QtCreator/...
+          #   macOS:         <install>/Qt Creator.app/Contents/Resources/lib/cmake/QtCreator/...
+          # Pointing CMAKE_PREFIX_PATH at the .app bundle root (or `Tools/QtCreator`)
+          # is enough on Linux but not on macOS, where the cmake/ tree lives
+          # under `Contents/Resources/`.
+          QTC_CONFIG=$(find "$RUNNER_WORKSPACE/qtcreator" -name 'QtCreatorConfig.cmake' -print -quit)
+          if [ -z "$QTC_CONFIG" ]; then
+              echo "Could not find QtCreatorConfig.cmake" >&2
+              ls -R "$RUNNER_WORKSPACE/qtcreator" | head -100
+              exit 1
+          fi
+          # Strip the known suffix instead of cd/pwd — pwd in Git Bash on
+          # Windows yields /d/a/... which CMake can't resolve. Parameter
+          # expansion preserves the find-returned style (D:\…/lib/cmake/…),
+          # which CMake handles natively.
+          QTC_ROOT="${QTC_CONFIG%/lib/cmake/QtCreator/QtCreatorConfig.cmake}"
+          echo "QTC_CONFIG=$QTC_CONFIG"
+          echo "QTC_ROOT=$QTC_ROOT"
+
+          cmake -B build -S . \
+              -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+              -DCMAKE_PREFIX_PATH="$Qt6_DIR;$QTC_ROOT"
+
+      - name: Build
+        run: cmake --build build --config RelWithDebInfo -j
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: QClaude-${{ matrix.os }}
+          # Ship the plugin .so/.dll/.dylib with both helpers — the panel
+          # resolves qclaude_mcp_permission as a sibling of the loaded
+          # plugin, so without it the pre-flight permission gate falls back
+          # to the post-hoc dialog. Globs cover the bare-name (Linux/macOS)
+          # and `.exe` (Windows) variants.
+          path: |
+            build/lib/qtcreator/plugins/${{ matrix.artifact }}
+            build/lib/qtcreator/plugins/qclaude_mcp_permission*
+            build/lib/qtcreator/plugins/qclaude_hook_bridge*
+            build/QClaude.json
+          if-no-files-found: warn
+          retention-days: 14
