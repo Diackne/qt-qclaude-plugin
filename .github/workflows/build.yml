@@ -173,7 +173,7 @@ jobs:
         run: cmake --build build --config RelWithDebInfo -j
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: QClaude-${{ matrix.os }}
           # Ship the plugin .so/.dll/.dylib with both helpers — the panel
