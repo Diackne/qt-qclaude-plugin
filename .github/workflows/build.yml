@@ -42,7 +42,7 @@ jobs:
             artifact: QClaude.dll
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # MSVC environment for the Windows build (cl.exe, link.exe, …).
       - name: Set up MSVC

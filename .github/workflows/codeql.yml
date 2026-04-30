@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # Initialize CodeQL *before* the build so it can wrap the compiler.
       # `security-and-quality` is the broader query suite (security + maintainability).
