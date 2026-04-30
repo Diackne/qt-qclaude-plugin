@@ -30,7 +30,7 @@ jobs:
       # Initialize CodeQL *before* the build so it can wrap the compiler.
       # `security-and-quality` is the broader query suite (security + maintainability).
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: cpp
           queries: security-and-quality
@@ -95,6 +95,6 @@ jobs:
         run: cmake --build build --config RelWithDebInfo -j
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:cpp"
