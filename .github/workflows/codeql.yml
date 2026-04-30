@@ -50,7 +50,7 @@ jobs:
 
       - name: Cache Qt Creator
         id: cache-qtc
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ runner.workspace }}/qtcreator
           key: qtc-online-ubuntu-latest-v1

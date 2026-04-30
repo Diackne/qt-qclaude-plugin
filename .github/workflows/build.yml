@@ -69,7 +69,7 @@ jobs:
       # to invalidate; otherwise we reuse the same headers + libs across runs.
       - name: Cache Qt Creator
         id: cache-qtc
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ runner.workspace }}/qtcreator
           key: qtc-online-${{ matrix.os }}-v1
