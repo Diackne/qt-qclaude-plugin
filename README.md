@@ -1,14 +1,18 @@
 # QClaude  Claude Code panel for Qt Creator
 
 [![Build plugin](https://github.com/Diackne/qt-qclaude-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/Diackne/qt-qclaude-plugin/actions/workflows/build.yml)
+[![Lint Codebase](https://github.com/Diackne/qt-qclaude-plugin/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
+[![CodeQL](https://github.com/Diackne/qt-qclaude-plugin/actions/workflows/codeql.yml/badge.svg)](https://github.com/Diackne/qt-qclaude-plugin/actions/workflows/codeql.yml)
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/Diackne/qt-qclaude-plugin/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Qt Creator](https://img.shields.io/badge/Qt%20Creator-19.0.0-41cd52.svg)](https://www.qt.io/product/development-tools)
-[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg)](#requirements)
+[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-lightgrey.svg)](#requirements)
 
 A free, open-source Qt Creator plugin that embeds [Claude Code](https://docs.claude.com/en/docs/claude-code) as a chat panel in Qt Creator's **right pane**, toggled from a theme-aware status-bar icon. It runs the `claude` CLI in the context of your current project (or the directory of the file you have open), streams the conversation token-by-token into a native Qt widget, and resumes the same session across turns and across Qt Creator restarts.
 
-> **Status:** experimental. Tested with Qt Creator 19.0.0 and Claude Code 2.1.x on Linux. CI builds Linux, macOS, and Windows.
+![QClaude chat panel docked in the Qt Creator right pane, showing the welcome state with the QClaude logo, "How can I help today?" headline, and starter chips next to a C++ editor](docs/screenshot-welcome.png)
+
+> **Status:** experimental. Tested with Qt Creator 19.0.0 and Claude Code 2.1.x on Linux. CI builds Linux and Windows.
 
 Repo: https://github.com/Diackne/qt-qclaude-plugin
 
@@ -151,10 +155,9 @@ cmake --build build -j
 
 The built plugin lands in:
 
-```
+```text
 build/lib/qtcreator/plugins/libQClaude.so          # Linux
 build/lib/qtcreator/plugins/QClaude.dll            # Windows
-build/lib/qtcreator/plugins/libQClaude.dylib       # macOS
 build/lib/qtcreator/plugins/qclaude_mcp_permission # MCP permission helper (sibling of the .so)
 build/lib/qtcreator/plugins/qclaude_hook_bridge    # legacy PreToolUse helper, no longer wired up
 ```
@@ -178,7 +181,7 @@ This is equivalent to:
 
 ### Continuous integration
 
-`.github/workflows/build.yml` runs a fail-fast=false matrix on **`ubuntu-latest`**, **`macos-latest`**, and **`windows-latest`**. It uses `jurplel/install-qt-action` for Qt 6.10.1 and `aqtinstall`'s `tools_qtcreator` for Qt Creator (the dev headers ride along as a sub-archive in current aqt). MSVC is initialized via `ilammy/msvc-dev-cmd`. Each platform's plugin artifact (`.so` / `.dll` / `.dylib`) plus both gate helpers (`qclaude_mcp_permission`, `qclaude_hook_bridge`) and the generated `QClaude.json` are uploaded for 14 days.
+`.github/workflows/build.yml` runs a fail-fast=false matrix on **`ubuntu-22.04`** and **`windows-2022`**. It uses `jurplel/install-qt-action` for Qt 6.10.1 and `aqtinstall`'s `tools_qtcreator` for Qt Creator (the dev headers ride along as a sub-archive in current aqt). MSVC is initialized via `ilammy/msvc-dev-cmd`. Each platform's plugin artifact (`.so` / `.dll`) plus both gate helpers (`qclaude_mcp_permission`, `qclaude_hook_bridge`) and the generated `QClaude.json` are uploaded for 14 days.
 
 ## Install
 
@@ -189,7 +192,6 @@ Copy the built plugin into your Qt Creator user plugin directory:
 | OS      | Path                                                                    |
 | ------- | ----------------------------------------------------------------------- |
 | Linux   | `~/.local/share/QtProject/Qt Creator/plugins/`                          |
-| macOS   | `~/Library/Application Support/QtProject/Qt Creator/plugins/`           |
 | Windows | `%APPDATA%\QtProject\Qt Creator\plugins\`                               |
 
 ```bash
@@ -208,7 +210,7 @@ Restart Qt Creator. If the plugin doesn't show up, enable it under **Help → Ab
 
 Drop the binary next to the bundled plugins (requires admin / root):
 
-```
+```text
 <QtCreator install>/lib/qtcreator/plugins/
 ```
 
@@ -255,7 +257,7 @@ Drop the binary next to the bundled plugins (requires admin / root):
 
 ## How it works
 
-```
+```text
 ┌──────────────────────────┐         ┌──────────────────────────┐
 │ Qt Creator right pane    │  spawn  │ claude (CLI subprocess)  │
 │   QClaudePanel           ├────────▶│   -p                     │
@@ -283,9 +285,9 @@ Drop the binary next to the bundled plugins (requires admin / root):
 
 ## Project layout
 
-```
+```text
 qt-qclaude-plugin/
-├── .github/workflows/build.yml     # Linux / macOS / Windows CI matrix
+├── .github/workflows/build.yml     # Linux / Windows CI matrix
 ├── CMakeLists.txt
 ├── LICENSE                         # MIT
 ├── QClaude.json.in                 # plugin metadata template

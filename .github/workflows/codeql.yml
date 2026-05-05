@@ -1,63 +1,48 @@
-name: Build plugin
+name: CodeQL
 
 on:
-  push:
-    branches: [master]
-    tags: ['v*']
   pull_request:
-    branches: [master]
-  workflow_dispatch:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '31 7 * * 3'
 
 permissions:
+  actions: read
+  checks: write
   contents: read
+  security-events: write
 
 env:
-  PLUGIN_NAME: QClaude
   QT_VERSION: 6.10.1
   QT_CREATOR_VERSION: 17.0.2
 
 jobs:
-  build:
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
-    permissions:
-      contents: write
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-22.04
+
     strategy:
       fail-fast: false
       matrix:
-        config:
-          - {
-              name: linux-x86_64,
-              os: ubuntu-22.04,
-              qtc_platform: linux_x64,
-            }
-          - {
-              name: windows-x86_64,
-              os: windows-2022,
-              qtc_platform: windows_x64,
-            }
+        include:
+          - language: cpp
+            build-mode: manual
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Install Linux build dependencies
-        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             ninja-build \
             libgl1-mesa-dev \
             libxkbcommon-dev
-
-      - name: Install Ninja (Windows)
-        if: runner.os == 'Windows'
-        run: choco install ninja -y
-
-      - name: Set up MSVC environment
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -74,10 +59,9 @@ jobs:
           string(REGEX REPLACE "^([0-9]+\\.[0-9]+).*" "\\1" qtc_minor "${qtc_version}")
           set(qtc_dir "$ENV{GITHUB_WORKSPACE}/qtcreator")
           file(MAKE_DIRECTORY "${qtc_dir}")
-          set(base_url "https://download.qt.io/official_releases/qtcreator/${qtc_minor}/${qtc_version}/installer_source/${{ matrix.config.qtc_platform }}")
+          set(base_url "https://download.qt.io/official_releases/qtcreator/${qtc_minor}/${qtc_version}/installer_source/linux_x64")
           foreach(pkg qtcreator qtcreator_dev)
             set(archive "$ENV{GITHUB_WORKSPACE}/${pkg}.7z")
-            message(STATUS "Downloading ${base_url}/${pkg}.7z")
             file(DOWNLOAD "${base_url}/${pkg}.7z" "${archive}" SHOW_PROGRESS STATUS dl_status)
             list(GET dl_status 0 dl_code)
             if(NOT dl_code EQUAL 0)
@@ -94,8 +78,14 @@ jobs:
           endforeach()
           file(APPEND "$ENV{GITHUB_OUTPUT}" "dir=${qtc_dir}\n")
 
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          source-root: src
+
       - name: Configure
-        shell: bash
         run: |
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
@@ -105,23 +95,7 @@ jobs:
       - name: Build
         run: cmake --build build --config Release
 
-      - name: Install
-        run: cmake --install build
-
-      - name: Package
-        shell: bash
-        run: |
-          cd install
-          7z a "../${PLUGIN_NAME}-${QT_CREATOR_VERSION}-${{ matrix.config.name }}.7z" .
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
         with:
-          name: ${{ env.PLUGIN_NAME }}-${{ env.QT_CREATOR_VERSION }}-${{ matrix.config.name }}
-          path: ${{ env.PLUGIN_NAME }}-${{ env.QT_CREATOR_VERSION }}-${{ matrix.config.name }}.7z
-
-      - name: Attach to release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ${{ env.PLUGIN_NAME }}-${{ env.QT_CREATOR_VERSION }}-${{ matrix.config.name }}.7z
+          category: "/language:${{ matrix.language }}"

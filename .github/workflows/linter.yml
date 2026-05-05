@@ -1,0 +1,43 @@
+name: Lint Codebase
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+  packages: read
+  statuses: write
+
+jobs:
+  lint:
+    name: Lint Codebase
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Lint Codebase
+        id: super-linter
+        uses: super-linter/super-linter/slim@v6
+        env:
+          DEFAULT_BRANCH: master
+          FILTER_REGEX_EXCLUDE: (build|logs|\.qtcreator)/.*
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_ALL_CODEBASE: true
+          VALIDATE_JSCPD: false
+          VALIDATE_CPP: false
+          VALIDATE_CLANG_FORMAT: false
+          VALIDATE_JAVASCRIPT_STANDARD: false
+          VALIDATE_TYPESCRIPT_STANDARD: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          MARKDOWN_CONFIG_FILE: .markdown-lint.yml
+          YAML_CONFIG_FILE: .yaml-lint.yml
