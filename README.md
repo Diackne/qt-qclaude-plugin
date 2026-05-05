@@ -1,5 +1,11 @@
 # QClaude  Claude Code panel for Qt Creator
 
+[![Build plugin](https://github.com/Diackne/qt-qclaude-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/Diackne/qt-qclaude-plugin/actions/workflows/build.yml)
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/Diackne/qt-qclaude-plugin/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Qt Creator](https://img.shields.io/badge/Qt%20Creator-19.0.0-41cd52.svg)](https://www.qt.io/product/development-tools)
+[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg)](#requirements)
+
 A free, open-source Qt Creator plugin that embeds [Claude Code](https://docs.claude.com/en/docs/claude-code) as a chat panel in Qt Creator's **right pane**, toggled from a theme-aware status-bar icon. It runs the `claude` CLI in the context of your current project (or the directory of the file you have open), streams the conversation token-by-token into a native Qt widget, and resumes the same session across turns and across Qt Creator restarts.
 
 > **Status:** experimental. Tested with Qt Creator 19.0.0 and Claude Code 2.1.x on Linux. CI builds Linux, macOS, and Windows.
